@@ -19,7 +19,21 @@ describe('recipe-lab routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: {
+          flour: {
+            amount: 4,
+            measurement: 'cup',
+          }, 
+          sugar: {
+            amount: 2,
+            measurement: 'cup',
+          }, 
+          'chocolate chips': {
+            amount: 1,
+            measurement: 'bag',
+          }
+        }
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -30,16 +44,30 @@ describe('recipe-lab routes', () => {
             'mix ingredients',
             'put dough on cookie sheet',
             'bake for 10 minutes'
-          ]
+          ],
+          ingredients: {
+            flour: {
+              amount: 4,
+              measurement: 'cup',
+            }, 
+            sugar: {
+              amount: 2,
+              measurement: 'cup',
+            }, 
+            'chocolate chips': {
+              amount: 1,
+              measurement: 'bag',
+            }
+          }
         });
       });
   });
 
   it('gets one recipe by id', async() => {
     await Promise.all([
-      { name: 'cookies', directions: [] },
-      { name: 'cake', directions: [] },
-      { name: 'pie', directions: [] }
+      { name: 'cookies', directions: [], ingredients: {} },
+      { name: 'cake', directions: [], ingredients: {} },
+      { name: 'pie', directions: [], ingredients: {} }
     ].map(recipe => Recipe.insert(recipe)));
 
     return request(app)
@@ -48,16 +76,17 @@ describe('recipe-lab routes', () => {
         expect(res.body).toEqual({
           id: expect.any(String),
           name: 'cookies',
-          directions: []
+          directions: [],
+          ingredients: {}
         });
       });
   });
 
   it('gets all recipes', async() => {
     const recipes = await Promise.all([
-      { name: 'cookies', directions: [] },
-      { name: 'cake', directions: [] },
-      { name: 'pie', directions: [] }
+      { name: 'cookies', directions: [], ingredients: {} },
+      { name: 'cake', directions: [], ingredients: {} },
+      { name: 'pie', directions: [], ingredients: {} }
     ].map(recipe => Recipe.insert(recipe)));
 
     return request(app)
@@ -78,6 +107,20 @@ describe('recipe-lab routes', () => {
         'put dough on cookie sheet',
         'bake for 10 minutes'
       ],
+      ingredients: {
+        flour: {
+          amount: 4,
+          measurement: 'cup',
+        }, 
+        sugar: {
+          amount: 2,
+          measurement: 'cup',
+        }, 
+        'chocolate chips': {
+          amount: 1,
+          measurement: 'bag',
+        }
+      }
     });
 
     return request(app)
@@ -89,7 +132,21 @@ describe('recipe-lab routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: {
+          flour: {
+            amount: 4,
+            measurement: 'cup',
+          }, 
+          sugar: {
+            amount: 2,
+            measurement: 'cup',
+          }, 
+          'chocolate chips': {
+            amount: 1,
+            measurement: 'bag',
+          }
+        }
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -100,7 +157,21 @@ describe('recipe-lab routes', () => {
             'mix ingredients',
             'put dough on cookie sheet',
             'bake for 10 minutes'
-          ]
+          ],
+          ingredients: {
+            flour: {
+              amount: 4,
+              measurement: 'cup',
+            }, 
+            sugar: {
+              amount: 2,
+              measurement: 'cup',
+            }, 
+            'chocolate chips': {
+              amount: 1,
+              measurement: 'bag',
+            }
+          }
         });
       });
   });
@@ -113,21 +184,26 @@ describe('recipe-lab routes', () => {
         'mix ingredients',
         'put dough on cookie sheet',
         'bake for 10 minutes'
-      ]
+      ],
+      ingredients: {
+        flour: {
+          amount: 4,
+          measurement: 'cup',
+        }, 
+        sugar: {
+          amount: 2,
+          measurement: 'cup',
+        }, 
+        'chocolate chips': {
+          amount: 1,
+          measurement: 'bag',
+        }
+      }
     });
 
     const response = await request(app)
       .delete(`/api/v1/recipes/${createdRecipe.id}`);
 
-    expect(response.body).toEqual({
-      id: createdRecipe.id,
-      name: 'good cookies',
-      directions: [
-        'preheat oven to 375',
-        'mix ingredients',
-        'put dough on cookie sheet',
-        'bake for 10 minutes'
-      ]
-    });
+    expect(response.body).toEqual({ ...createdRecipe });
   });
 });
