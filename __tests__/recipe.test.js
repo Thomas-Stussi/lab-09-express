@@ -29,7 +29,7 @@ describe('recipe-lab routes', () => {
             amount: 2,
             measurement: 'cup',
           }, 
-          'chocolate chips': {
+          chocolateChips: {
             amount: 1,
             measurement: 'bag',
           }
@@ -54,7 +54,7 @@ describe('recipe-lab routes', () => {
               amount: 2,
               measurement: 'cup',
             }, 
-            'chocolate chips': {
+            chocolateChips: {
               amount: 1,
               measurement: 'bag',
             }
@@ -116,7 +116,7 @@ describe('recipe-lab routes', () => {
           amount: 2,
           measurement: 'cup',
         }, 
-        'chocolate chips': {
+        chocolateChips: {
           amount: 1,
           measurement: 'bag',
         }
@@ -142,7 +142,7 @@ describe('recipe-lab routes', () => {
             amount: 2,
             measurement: 'cup',
           }, 
-          'chocolate chips': {
+          chocolateChips: {
             amount: 1,
             measurement: 'bag',
           }
@@ -167,7 +167,7 @@ describe('recipe-lab routes', () => {
               amount: 2,
               measurement: 'cup',
             }, 
-            'chocolate chips': {
+            chocolateChips: {
               amount: 1,
               measurement: 'bag',
             }
@@ -194,7 +194,7 @@ describe('recipe-lab routes', () => {
           amount: 2,
           measurement: 'cup',
         }, 
-        'chocolate chips': {
+        chocolateChips: {
           amount: 1,
           measurement: 'bag',
         }
