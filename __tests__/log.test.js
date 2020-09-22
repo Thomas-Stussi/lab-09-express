@@ -2,109 +2,143 @@ const fs = require('fs');
 const pool = require('../lib/utils/pool');
 const request = require('supertest');
 const app = require('../lib/app');
-const Recipe = require('../lib/models/recipe');
+const Log = require('../lib/models/log');
 
-describe('recipe-lab routes', () => {
+describe('log routes', () => {
   beforeEach(() => {
     return pool.query(fs.readFileSync('./sql/setup.sql', 'utf-8'));
   });
 
-  it('creates a recipe', () => {
+  it('creates a log', () => {
     return request(app)
-      .post('/api/v1/recipes')
+      .post('/api/v1/logs')
       .send({
-        name: 'cookies',
-        directions: [
-          'preheat oven to 375',
-          'mix ingredients',
-          'put dough on cookie sheet',
-          'bake for 10 minutes'
-        ]
+        recipeId: '1',
+        dateOfEvent: '5/20/20',
+        notes: 'super delicious',
+        rating: 10
       })
       .then(res => {
         expect(res.body).toEqual({
           id: expect.any(String),
-          name: 'cookies',
-          directions: [
-            'preheat oven to 375',
-            'mix ingredients',
-            'put dough on cookie sheet',
-            'bake for 10 minutes'
-          ]
+          recipeId: '1',
+          dateOfEvent: '5/20/20',
+          notes: 'super delicious',
+          rating: 10
         });
       });
   });
 
-  //it gets recipe by id
-  it('gets one recipe by id', async() => {
-    const recipes = await Promise.all([
-      { name: 'cookies', directions: [] },
-      { name: 'cake', directions: [] },
-      { name: 'pie', directions: [] }
-    ].map(recipe => Recipe.insert(recipe)));
+  it('gets one log by id', async() => {
+    await Promise.all([
+      {
+        recipeId: '1',
+        dateOfEvent: '5/20/20',
+        notes: 'super delicious',
+        rating: 10
+      },
+      {
+        recipeId: '2',
+        dateOfEvent: '5/21/20',
+        notes: 'super delicious',
+        rating: 10
+      },
+      {
+        recipeId: '3',
+        dateOfEvent: '5/22/20',
+        notes: 'super delicious',
+        rating: 10
+      }
+    ].map(log => Log.insert(log)));
 
     return request(app)
-      .get('/api/v1/recipes/1')
+      .get('/api/v1/logs/1')
       .then(res => {
         expect(res.body).toEqual({
           id: expect.any(String),
-          name: 'cookies',
-          directions: []
+          recipeId: '1',
+          dateOfEvent: '5/20/20',
+          notes: 'super delicious',
+          rating: 10
         });
       });
   });
 
-  it('gets all recipes', async() => {
-    const recipes = await Promise.all([
-      { name: 'cookies', directions: [] },
-      { name: 'cake', directions: [] },
-      { name: 'pie', directions: [] }
-    ].map(recipe => Recipe.insert(recipe)));
+  it('gets one log by id', async() => {
+    const logs = await Promise.all([
+      {
+        recipeId: '1',
+        dateOfEvent: '5/20/20',
+        notes: 'super delicious',
+        rating: 10
+      },
+      {
+        recipeId: '2',
+        dateOfEvent: '5/21/20',
+        notes: 'super delicious',
+        rating: 10
+      },
+      {
+        recipeId: '3',
+        dateOfEvent: '5/22/20',
+        notes: 'super delicious',
+        rating: 10
+      }
+    ].map(log => Log.insert(log)));
 
     return request(app)
-      .get('/api/v1/recipes')
+      .get('/api/v1/logs')
       .then(res => {
-        recipes.forEach(recipe => {
-          expect(res.body).toContainEqual(recipe);
-        });
+        logs.forEach(log => {
+          expect(res.body).toContainEqual(log);
+        });  
       });
   });
 
-  it('updates a recipe by id', async() => {
-    const recipe = await Recipe.insert({
-      name: 'cookies',
-      directions: [
-        'preheat oven to 375',
-        'mix ingredients',
-        'put dough on cookie sheet',
-        'bake for 10 minutes'
-      ],
+  it('updates a log by id', async() => {
+    const log = await Log.insert({
+      recipeId: '1',
+      dateOfEvent: '5/20/20',
+      notes: 'super delicious',
+      rating: 10
     });
 
     return request(app)
-      .put(`/api/v1/recipes/${recipe.id}`)
+      .put(`/api/v1/logs/${log.id}`)
       .send({
-        name: 'good cookies',
-        directions: [
-          'preheat oven to 375',
-          'mix ingredients',
-          'put dough on cookie sheet',
-          'bake for 10 minutes'
-        ]
+        recipeId: '3',
+        dateOfEvent: '5/22/20',
+        notes: 'super delicious',
+        rating: 10
       })
       .then(res => {
         expect(res.body).toEqual({
           id: expect.any(String),
-          name: 'good cookies',
-          directions: [
-            'preheat oven to 375',
-            'mix ingredients',
-            'put dough on cookie sheet',
-            'bake for 10 minutes'
-          ]
+          recipeId: '3',
+          dateOfEvent: '5/22/20',
+          notes: 'super delicious',
+          rating: 10
         });
       });
   });
 
-  //it deletes a recipe
+  it('deletes a log by id', async() => {
+    const log = await Log.insert({
+      recipeId: '3',
+      dateOfEvent: '5/22/20',
+      notes: 'super delicious',
+      rating: 10
+    });
+
+    const response = await request(app)
+      .delete(`/api/v1/logs/${log.id}`);
+
+    expect(response.body).toEqual({
+      id: log.id,
+      recipeId: '3',
+      dateOfEvent: '5/22/20',
+      notes: 'super delicious',
+      rating: 10
+    });
+  });
 });

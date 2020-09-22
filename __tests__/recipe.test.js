@@ -105,7 +105,6 @@ describe('recipe-lab routes', () => {
       });
   });
 
-  //it deletes a recipe
   it('deletes a recipe by id', async() => {
     const createdRecipe = await Recipe.insert({
       name: 'good cookies',
